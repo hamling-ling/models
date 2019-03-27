@@ -168,10 +168,11 @@ def run(dataset_dir):
   training_filename = _get_output_filename(dataset_dir, 'train')
   testing_filename = _get_output_filename(dataset_dir, 'test')
 
-  if tf.gfile.Exists(training_filename) and tf.gfile.Exists(testing_filename):
-    print('Dataset files already exist. Exiting without re-creating them.')
-    return
+  #if tf.gfile.Exists(training_filename) and tf.gfile.Exists(testing_filename):
+  #  print('Dataset files already exist. Exiting without re-creating them.')
+  #  return
 
+  print("downloading")
   dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
 
   # First, process the training data:
