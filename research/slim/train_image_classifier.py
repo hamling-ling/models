@@ -514,6 +514,9 @@ def main(_):
     #########################################
     # Configure the optimization procedure. #
     #########################################
+
+    tf.contrib.quantize.create_training_graph(quant_delay=90000)
+
     with tf.device(deploy_config.optimizer_device()):
       learning_rate = _configure_learning_rate(dataset.num_samples, global_step)
       optimizer = _configure_optimizer(learning_rate)
