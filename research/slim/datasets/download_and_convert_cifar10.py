@@ -150,7 +150,7 @@ def _clean_up_temporary_files(dataset_dir):
   """
   filename = _DATA_URL.split('/')[-1]
   filepath = os.path.join(dataset_dir, filename)
-  tf.gfile.Remove(filepath)
+  #tf.gfile.Remove(filepath)
 
   tmp_dir = os.path.join(dataset_dir, 'cifar-10-batches-py')
   tf.gfile.DeleteRecursively(tmp_dir)
