@@ -91,10 +91,13 @@ def download_and_uncompress_tarball(tarball_url, dataset_dir):
     sys.stdout.write('\r>> Downloading %s %.1f%%' % (
         filename, float(count * block_size) / float(total_size) * 100.0))
     sys.stdout.flush()
-  filepath, _ = urllib.request.urlretrieve(tarball_url, filepath, _progress)
-  print()
+  if not os.path.exists(filepath):
+    print(filepath, " downloading...")
+    filepath, _ = urllib.request.urlretrieve(tarball_url, filepath, _progress)
+    print(filepath, " downloaded")
   statinfo = os.stat(filepath)
   print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+  print("extracting ", filepath, "to ", dataset_dir)
   tarfile.open(filepath, 'r:gz').extractall(dataset_dir)
 
 
