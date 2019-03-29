@@ -28,7 +28,7 @@ set -e
 TRAIN_DIR=cifarnet-model
 
 # Where the dataset is saved to.
-DATASET_DIR=cifar10
+DATASET_DIR=cifar10_data
 
 # Download the dataset
 python download_and_convert_data.py \
