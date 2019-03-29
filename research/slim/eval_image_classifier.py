@@ -178,13 +178,16 @@ def main(_):
 
     tf.logging.info('Evaluating %s' % checkpoint_path)
 
+    gpu_options = tf.GPUOptions(allow_growth=True)
+    session_config = tf.ConfigProto(gpu_options=gpu_options)
     slim.evaluation.evaluate_once(
         master=FLAGS.master,
         checkpoint_path=checkpoint_path,
         logdir=FLAGS.eval_dir,
         num_evals=num_batches,
         eval_op=list(names_to_updates.values()),
-        variables_to_restore=variables_to_restore)
+        variables_to_restore=variables_to_restore,
+        session_config=session_config)
 
 
 if __name__ == '__main__':

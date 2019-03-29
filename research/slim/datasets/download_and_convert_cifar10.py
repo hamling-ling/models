@@ -88,7 +88,9 @@ def _add_to_tfrecord(filename, tfrecord_writer, offset=0):
     image_placeholder = tf.placeholder(dtype=tf.uint8)
     encoded_image = tf.image.encode_png(image_placeholder)
 
-    with tf.Session('') as sess:
+    gpu_options = tf.GPUOptions(allow_growth=True)
+    session_config = tf.ConfigProto(gpu_options=gpu_options)
+    with tf.Session('', config=session_config) as sess:
 
       for j in range(num_images):
         sys.stdout.write('\r>> Reading file [%s] image %d/%d' % (
@@ -150,7 +152,7 @@ def _clean_up_temporary_files(dataset_dir):
   """
   filename = _DATA_URL.split('/')[-1]
   filepath = os.path.join(dataset_dir, filename)
-  tf.gfile.Remove(filepath)
+  #tf.gfile.Remove(filepath)
 
   tmp_dir = os.path.join(dataset_dir, 'cifar-10-batches-py')
   tf.gfile.DeleteRecursively(tmp_dir)
@@ -168,10 +170,11 @@ def run(dataset_dir):
   training_filename = _get_output_filename(dataset_dir, 'train')
   testing_filename = _get_output_filename(dataset_dir, 'test')
 
-  if tf.gfile.Exists(training_filename) and tf.gfile.Exists(testing_filename):
-    print('Dataset files already exist. Exiting without re-creating them.')
-    return
+  #if tf.gfile.Exists(training_filename) and tf.gfile.Exists(testing_filename):
+  #  print('Dataset files already exist. Exiting without re-creating them.')
+  #  return
 
+  print("downloading")
   dataset_utils.download_and_uncompress_tarball(_DATA_URL, dataset_dir)
 
   # First, process the training data:

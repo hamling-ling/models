@@ -514,6 +514,9 @@ def main(_):
     #########################################
     # Configure the optimization procedure. #
     #########################################
+
+    tf.contrib.quantize.create_training_graph(quant_delay=90000)
+
     with tf.device(deploy_config.optimizer_device()):
       learning_rate = _configure_learning_rate(dataset.num_samples, global_step)
       optimizer = _configure_optimizer(learning_rate)
@@ -563,6 +566,8 @@ def main(_):
     ###########################
     # Kicks off the training. #
     ###########################
+    gpu_options = tf.GPUOptions(allow_growth=True)
+    session_config = tf.ConfigProto(gpu_options=gpu_options)
     slim.learning.train(
         train_tensor,
         logdir=FLAGS.train_dir,
@@ -574,7 +579,8 @@ def main(_):
         log_every_n_steps=FLAGS.log_every_n_steps,
         save_summaries_secs=FLAGS.save_summaries_secs,
         save_interval_secs=FLAGS.save_interval_secs,
-        sync_optimizer=optimizer if FLAGS.sync_replicas else None)
+        sync_optimizer=optimizer if FLAGS.sync_replicas else None,
+        session_config = session_config)
 
 
 if __name__ == '__main__':

@@ -115,6 +115,9 @@ def main(_):
                                  shape=[FLAGS.batch_size, image_size,
                                         image_size, 3])
     network_fn(placeholder)
+
+    tf.contrib.quantize.create_eval_graph()
+
     graph_def = graph.as_graph_def()
     with gfile.GFile(FLAGS.output_file, 'wb') as f:
       f.write(graph_def.SerializeToString())
