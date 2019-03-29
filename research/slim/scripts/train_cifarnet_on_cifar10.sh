@@ -62,3 +62,31 @@ python eval_image_classifier.py \
   --dataset_split_name=test \
   --dataset_dir=${DATASET_DIR} \
   --model_name=cifarnet
+
+echo -------- exporting --------
+export LAST_CHECKPOINT=`head -n1 $TRAIN_DIR/checkpoint | cut -d'"' -f2`
+echo LAST_CHECKPOINT=$LAST_CHECKPOINT
+
+python export_inference_graph.py \
+    --model_name=cifarnet \
+    --dataset_name=cifar10 \
+    --output_file=cifarnet_inf_graph.pb
+
+echo -------- freezing --------
+python -m tensorflow.python.tools.freeze_graph \
+--input_graph=cifarnet_inf_graph.pb \
+--input_checkpoint=${LAST_CHECKPOINT} \
+--input_binary=true \
+--output_graph=frozen_cifarnet.pb \
+--output_node_names=CifarNet/Predictions/Softmax
+
+echo -------- converting --------
+tflite_convert --graph_def_file=frozen_cifarnet.pb \
+--output_file=quantized_cifarnet.tflite \
+--input_format=TENSORFLOW_GRAPHDEF \
+--output_format=TFLITE \
+--inference_type=QUANTIZED_UINT8 \
+--output_arrays=CifarNet/Predictions/Softmax \
+--input_arrays=input \
+--mean_values 121 \
+--std_dev_values 64
