@@ -75,7 +75,7 @@ python export_inference_graph.py \
 echo -------- freezing --------
 python -m tensorflow.python.tools.freeze_graph \
 --input_graph=cifarnet_inf_graph.pb \
---input_checkpoint=${LAST_CHECKPOINT} \
+--input_checkpoint=$TRAIN_DIR/${LAST_CHECKPOINT} \
 --input_binary=true \
 --output_graph=frozen_cifarnet.pb \
 --output_node_names=CifarNet/Predictions/Softmax
